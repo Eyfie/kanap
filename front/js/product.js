@@ -39,3 +39,22 @@ function getProductId(){
     let product_id = currentUrl.searchParams.get("id");
     return product_id;
 }
+
+
+//* Check the item quantity and return its value if it's correct.
+checkItemQuantity(){
+    let itemQuantity = document.querySelector("#quantity").value;
+
+    if(isNan(itemQuantity) || itemQuantity < 0 || itemQuantity > 100){    
+        itemQuantity = 1;
+        throw alert("Vous ne pouvez commander que de 1 à 100 de ces articles !");
+    }
+    return itemQuantity;
+}
+
+//* Check if a color has been picked
+checkItemColor(itemColor, possibleColor){
+    if(itemColor != possibleColor){
+        document.querySelector(#colors).
+    }
+}
