@@ -5,27 +5,29 @@
 loadConfig()
     .then(data => {
 
-        let config = data;
+        const config = data;
 
-       //* Get product ID
-       let product_id = getProductId();
+        //* Get product ID
+        const product_id = getProductId();
 
         //* Fetch product data
-       fetch(config.host + "api/products/" + product_id)
-        .then(data => data.json())
-        .then(jsonProduct => {
+        fetch(config.host + "/api/products/" + product_id)
+            .then(data => data.json())
+            .then(product => {
 
-            //* Display product data on page
-            document.title = jsonProduct.name + '- Kanap';
-            document.querySelector(".item__img").innerHTML += `<img src="${jsonProduct.imageUrl}" alt="${jsonProduct.altTxt}">`
-            document.querySelector("#description").textContent = jsonProduct.description
+                //* Display product data on page
+                document.querySelector(".item__img").innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+                document.querySelector("#price").textContent = product.price;
+                document.querySelector("#description").textContent = product.description;
+                document.querySelector("#title").textContent = product.name;
+                document.title = product.name;
 
-            //jsonProduct.colors.forEach(color => {
-              //  document.querySelector('')
-            //});
-
+                //* Loop through colors and display them in options
+                let colors = product.colors;
+                colors.forEach(color=> {
+                    document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`;
+            });
         });
-
 });
 
 
@@ -37,7 +39,3 @@ function getProductId(){
     let product_id = currentUrl.searchParams.get("id");
     return product_id;
 }
-
-
-
-console.log(getProductId())
