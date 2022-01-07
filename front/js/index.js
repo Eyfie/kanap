@@ -1,6 +1,6 @@
 
 
-//* Load Config files
+//* Load Config file
 
 loadConfig()
     .then(data => {
