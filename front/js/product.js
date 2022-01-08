@@ -1,4 +1,13 @@
+//* Product Constant
+const image = document.querySelector(".item__img");
+const price = document.querySelector("#price");
+const description = document.querySelector("#description");
+const title = document.querySelector("#title");
+const productcolors = document.querySelector("#colors");
 
+//* Form Constant
+const quantity = document.querySelector("#quantity");
+const submit = document.querySelector('#addToCart');
 
 
 //* Load Config file
@@ -16,16 +25,16 @@ loadConfig()
             .then(product => {
 
                 //* Display product data on page
-                document.querySelector(".item__img").innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
-                document.querySelector("#price").textContent = product.price;
-                document.querySelector("#description").textContent = product.description;
-                document.querySelector("#title").textContent = product.name;
+                image.innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+                price.textContent = product.price;
+                description.textContent = product.description;
+                title.textContent = product.name;
                 document.title = product.name;
 
                 //* Loop through colors and display them in options
                 let colors = product.colors;
                 colors.forEach(color=> {
-                    document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`;
+                    productcolors.innerHTML += `<option value="${color}">${color}</option>`;
             });
         });
 });
@@ -42,19 +51,49 @@ function getProductId(){
 
 
 //* Check the item quantity and return its value if it's correct.
-checkItemQuantity(){
-    let itemQuantity = document.querySelector("#quantity").value;
+function checkItemQuantity(){
+    try{
+    let itemQuantity = quantity.value;
 
-    if(isNan(itemQuantity) || itemQuantity < 0 || itemQuantity > 100){    
-        itemQuantity = 1;
-        throw alert("Vous ne pouvez commander que de 1 à 100 de ces articles !");
+    if(isNaN(itemQuantity) || itemQuantity < 0 || itemQuantity > 100){    
+        quantity.value = 1;
+        throw Swal.fire({
+            title : `Nombre invalide`,
+            text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
+            icon : `warning`});
     }
     return itemQuantity;
-}
-
-//* Check if a color has been picked
-checkItemColor(itemColor, possibleColor){
-    if(itemColor != possibleColor){
-        document.querySelector(#colors).
+    }
+    catch(Error){
+        console.log(Error);
     }
 }
+
+//* Check if item color is selected
+function checkItemColor(){
+
+    let itemColor = productcolors.value;
+    if(!itemColor){
+        throw Swal.fire({
+            title : `Sélectionnez une couleur`,
+            text : `Vous n'avez pas sélectionné de couleur`,
+            icon : `warning`});
+    }
+    return itemColor;
+}
+
+//* Handling submit event
+submit.addEventListener('click', (e) =>{
+    try{
+        //* Check if everything is fine
+        e.preventDefault;
+        const quantity = checkItemQuantity();
+        const color = checkItemColor();
+
+        
+
+    }
+    catch(Error){
+        console.log(Error);
+    }
+});
