@@ -9,6 +9,16 @@ const productcolors = document.querySelector("#colors");
 const quantity = document.querySelector("#quantity");
 const submit = document.querySelector('#addToCart');
 
+/*
+const myFunction = () => {
+    //* function code
+}
+
+function myFunction(){
+    //* function code
+}
+*/
+
 
 //* Load Config file
 loadConfig()
@@ -69,6 +79,8 @@ function checkItemQuantity(){
     }
 }
 
+
+
 //* Check if item color is selected
 function checkItemColor(){
 
@@ -82,6 +94,8 @@ function checkItemColor(){
     return itemColor;
 }
 
+
+
 //* Handling submit event
 submit.addEventListener('click', (e) =>{
     try{
@@ -89,7 +103,7 @@ submit.addEventListener('click', (e) =>{
         e.preventDefault;
         const quantity = checkItemQuantity();
         const color = checkItemColor();
-
+        console.log(quantity, color);
         
 
     }
