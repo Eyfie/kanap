@@ -69,46 +69,6 @@ function getProductId(){
 }
 
 
-//* Check the item quantity and return its value if it's correct.
-function checkItemQuantity(){
-    try{
-
-        let itemQuantity = quantityElem.value;
-
-        if(isNaN(itemQuantity) || itemQuantity < 0 || itemQuantity > 100){    
-            quantityElem.value = 1;
-
-            throw Swal.fire({
-                title : `Nombre invalide`,
-                text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
-                icon : `warning`});
-        }
-
-        return itemQuantity;
-    }
-
-    catch(Error){
-        console.log(Error);
-    }
-}
-
-
-
-//* Check if item color is selected
-function checkItemColor(){
-
-    let itemColor = productColorsElem.value;
-    if(!itemColor){
-        throw Swal.fire({
-            title : `Sélectionnez une couleur`,
-            text : `Vous n'avez pas sélectionné de couleur`,
-            icon : `warning`});
-    }
-    return itemColor;
-}
-
-
-
 //* Handling submit event
 submitElem.addEventListener('click', () =>{
     try{
@@ -161,7 +121,7 @@ submitElem.addEventListener('click', () =>{
         }
         
        
-        let kanapCartItem = {productId, quantity, color};
+        let kanapCartItem = {productId, quantityInput, color};
         kanapCart = [...kanapCart,kanapCartItem];
         localStorage.setItem("kanapCart", JSON.stringify(kanapCart));
 
