@@ -6,7 +6,7 @@ const titleElem = document.querySelector("#title");
 const productColorsElem = document.querySelector("#colors");
 
 //* Form Constant
-const quantityElem = document.querySelector("#quantity");
+let quantityElem = document.querySelector("#quantity");
 const submitElem = document.querySelector('#addToCart');
 
 //*URL
@@ -84,15 +84,15 @@ submitElem.addEventListener('click', () =>{
         //*Check if there's a similar object in local storage and update it.
         //* Check if everything is fine.
         const quantityInput = quantityElem.value;
-        let kanapCart = JSON.parse(localStorage.getItem('kanapCart'));
+        let kanapCart = JSON.parse(localStorage.getItem('kanapCart')) || [];
 
         //*loop à travers tous les articles du Cart
-        kanapCart.map((kanapCartItem) => {
+        kanapCart.map((item => {
 
             //*Check si un article de même couleur et type se trouve dans le Cart
             if(item.productId == productId && item.color == color){
 
-                let newQuantity = kanapCartItem.quantity + quantityInput;
+                let newQuantity = item.quantity + quantityInput;
 
                 //*Check si la somme totale d'article n'est pas supérieure à 100
                 if(newQuantity > 100){
@@ -106,7 +106,7 @@ submitElem.addEventListener('click', () =>{
                 }
             }
 
-            return kanapCartItem.quantity = newQuantity;
+            return item.quantity += quantityInput;
             
         });
 
