@@ -9,6 +9,7 @@ const productColorsElem = document.querySelector("#colors");
 let quantityElem = document.querySelector("#quantity");
 const submitElem = document.querySelector('#addToCart');
 
+
 //*URL
 
 const urlString = document.URL;
@@ -20,14 +21,11 @@ const productId = currentUrl.searchParams.get("id");
 //* Load Config file
 loadConfig()
     .then(data => {
-
+        
         const config = data;
 
-        //* Get product ID
-        const product_id = getProductId();
-
         //* Fetch product data
-        fetch(config.host + "/api/products/" + product_id)
+        fetch(config.host + "/api/products/" + productId)
             .then(data => data.json())
             .then(product => {
 
@@ -59,16 +57,6 @@ loadConfig()
 });
 
 
-//* Get page URL and get the ID in it
-function getProductId(){
-    
-    let urlString = document.URL;
-    let currentUrl = new URL(urlString);
-    let product_id = currentUrl.searchParams.get("id");
-    return product_id;
-}
-
-
 //* Handling submit event
 submitElem.addEventListener('click', () =>{
     try{
@@ -80,10 +68,18 @@ submitElem.addEventListener('click', () =>{
                 text : `Vous n'avez pas sélectionné de couleur`,
                 icon : `warning`});
         }
+         //*Check if quantity is valid
+         let quantityInput = quantityElem.value;
+         console.log(quantityInput);
+         if(quantityInput == 0 || quantityInput < 0 || quantityInput > 100){
+            quantityInput = 1;
+            throw Swal.fire({
+                title : `Nombre invalide`,
+                text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
+                icon : `warning`});
+        }
 
         //*Check if there's a similar object in local storage and update it.
-        //* Check if everything is fine.
-        const quantityInput = quantityElem.value;
         let kanapCart = JSON.parse(localStorage.getItem('kanapCart')) || [];
 
         //*loop à travers tous les articles du Cart
@@ -92,35 +88,26 @@ submitElem.addEventListener('click', () =>{
             //*Check si un article de même couleur et type se trouve dans le Cart
             if(item.productId == productId && item.color == color){
 
-                let newQuantity = item.quantity + quantityInput;
-
+                let newQuantity = item.quantityInput + quantityInput;
+                console.log(newQuantity)
                 //*Check si la somme totale d'article n'est pas supérieure à 100
                 if(newQuantity > 100){
-                    let maxQuantity  = 100 - baseQuantity;
+                    let maxQuantity  = 100 - item.quantityInput;
                     quantityElem.max = maxQuantity;
                     quantityElem.value = maxQuantity;
                     throw Swal.fire({
                         title : `Nombre invalide`,
-                        text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
+                        text : `Vous ne pouvez commander que ${maxQuantity} avant d'atteindre le seuil de 100 articles !`,
                         icon : `warning`});
                 }
+
+                item.quantityInput = parseFloat(item.quantityInput) + parseFloat(quantityInput);
             }
 
-            return item.quantity += quantityInput;
             
-        });
+            
+        }));
 
-
-        //*Check if quantity is valid
-        if(quantityInput == 0 || quantityInput < 0 || quantityInput > 100){
-            quantityElem = 1;
-            throw Swal.fire({
-                title : `Nombre invalide`,
-                text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
-                icon : `warning`});
-        }
-        
-       
         let kanapCartItem = {productId, quantityInput, color};
         kanapCart = [...kanapCart,kanapCartItem];
         localStorage.setItem("kanapCart", JSON.stringify(kanapCart));
@@ -191,3 +178,13 @@ function checkCart(){
     })
 
 }*/
+
+
+
+
+
+
+//* Check si item est déjà dans storage
+//* Si item dans storage update quantité
+//* Si quantity > 100 retour sur le max possible a commander
+//* Mettre article dans storage
