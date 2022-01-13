@@ -10,7 +10,7 @@ loadConfig()
         //* Get JSON list of product from API
         fetch(config.host + "/api/products")
             .then(data => data.json())
-            .then( jsonListProduct =>  {
+            .then(jsonListProduct =>  {
 
                 //* Loop through every product and display them
                jsonListProduct.forEach(product => {

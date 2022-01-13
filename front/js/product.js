@@ -1,25 +1,22 @@
 //* Product Constant
-const image = document.querySelector(".item__img");
-const price = document.querySelector("#price");
-const description = document.querySelector("#description");
-const title = document.querySelector("#title");
-const productColors = document.querySelector("#colors");
+const imageElem = document.querySelector(".item__img");
+const priceElem = document.querySelector("#price");
+const descriptionElem = document.querySelector("#description");
+const titleElem = document.querySelector("#title");
+const productColorsElem = document.querySelector("#colors");
 
 //* Form Constant
-const quantity = document.querySelector("#quantity");
-const submit = document.querySelector('#addToCart');
+const quantityElem = document.querySelector("#quantity");
+const submitElem = document.querySelector('#addToCart');
 
-/*
-const myFunction = () => {
-    //* function code
-}
+//*URL
 
-function myFunction(){
-    //* function code
-}
-*/
+const urlString = document.URL;
+const currentUrl = new URL(urlString);
+const productId = currentUrl.searchParams.get("id");
 
-// TODO : Gérer le cas ou il l'id produit dans l'URL est pas bonne.
+
+// TODO : Gérer le cas ou l'id produit dans l'URL est pas bonne.
 //* Load Config file
 loadConfig()
     .then(data => {
@@ -42,16 +39,16 @@ loadConfig()
                     })
                 }
                     //* Display product data on page
-                    image.innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
-                    price.textContent = product.price;
-                    description.textContent = product.description;
-                    title.textContent = product.name;
+                    imageElem.innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+                    priceElem.textContent = product.price;
+                    descriptionElem.textContent = product.description;
+                    titleElem.textContent = product.name;
                     document.title = product.name;
 
                     //* Loop through colors and display them in options
                     let colors = product.colors;
                     colors.forEach(color=> {
-                        productColors.innerHTML += `<option value="${color}">${color}</option>`;
+                        productColorsElem.innerHTML += `<option value="${color}">${color}</option>`;
                     });
 
             }) 
@@ -76,10 +73,10 @@ function getProductId(){
 function checkItemQuantity(){
     try{
 
-        let itemQuantity = quantity.value;
+        let itemQuantity = quantityElem.value;
 
         if(isNaN(itemQuantity) || itemQuantity < 0 || itemQuantity > 100){    
-            quantity.value = 1;
+            quantityElem.value = 1;
 
             throw Swal.fire({
                 title : `Nombre invalide`,
@@ -100,7 +97,7 @@ function checkItemQuantity(){
 //* Check if item color is selected
 function checkItemColor(){
 
-    let itemColor = productcolors.value;
+    let itemColor = productColorsElem.value;
     if(!itemColor){
         throw Swal.fire({
             title : `Sélectionnez une couleur`,
@@ -113,20 +110,64 @@ function checkItemColor(){
 
 
 //* Handling submit event
-submit.addEventListener('click', (e) =>{
+submitElem.addEventListener('click', () =>{
     try{
-        //* Check if everything is fine
-        e.preventDefault;
-        const quantity = checkItemQuantity();
-        const color = checkItemColor();
-        console.log(quantity, color);
-    localStorage.getItem('kanapCart')
+        //*Check if a color has been picked
+        const color = productColorsElem.value;
+        if(!color){
+            throw Swal.fire({
+                title : `Sélectionnez une couleur`,
+                text : `Vous n'avez pas sélectionné de couleur`,
+                icon : `warning`});
+        }
+
+        //*Check if there's a similar object in local storage and update it.
+        //* Check if everything is fine.
+        const quantityInput = quantityElem.value;
+        let kanapCart = JSON.parse(localStorage.getItem('kanapCart'));
+
+        //*loop à travers tous les articles du Cart
+        kanapCart.map((kanapCartItem) => {
+
+            //*Check si un article de même couleur et type se trouve dans le Cart
+            if(item.productId == productId && item.color == color){
+
+                let newQuantity = kanapCartItem.quantity + quantityInput;
+
+                //*Check si la somme totale d'article n'est pas supérieure à 100
+                if(newQuantity > 100){
+                    let maxQuantity  = 100 - baseQuantity;
+                    quantityElem.max = maxQuantity;
+                    quantityElem.value = maxQuantity;
+                    throw Swal.fire({
+                        title : `Nombre invalide`,
+                        text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
+                        icon : `warning`});
+                }
+            }
+
+            return kanapCartItem.quantity = newQuantity;
+            
+        });
 
 
-    localStorage.setItem('kanapCart', {12, 25, Bleu})
-    }
-    catch(Error){
-        console.log(Error);
+        //*Check if quantity is valid
+        if(quantityInput == 0 || quantityInput < 0 || quantityInput > 100){
+            quantityElem = 1;
+            throw Swal.fire({
+                title : `Nombre invalide`,
+                text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
+                icon : `warning`});
+        }
+        
+       
+        let kanapCartItem = {productId, quantity, color};
+        kanapCart = [...kanapCart,kanapCartItem];
+        localStorage.setItem("kanapCart", JSON.stringify(kanapCart));
+
+
+    }catch(error){
+        console.log(error);
     }
 });
 
@@ -167,4 +208,26 @@ localStorage.setItem('kanapCart', result)
 console.log(result);
 // expected output: Array ["exuberant", "destruction", "present"]
 
-*/
+
+
+function checkCart(){
+    //JSON.parse(localStorage.getItem('kanapCart'));
+    //* Parcours de kanapCart dans le localstorage
+    const result = kanapCart.map((item) => {
+        //*Check si l'item est déjà présent
+        if(item.id == getProductId() && item.color == productcolor.value){
+            let baseQuantity = item.quantity;
+            let newQuantity = item.quantity + quantity;
+            //* Check si la quantité d'articles n'est pas supérieur à 100.
+            if(newQuantity > 100){
+                maxAddQuantity = 100 - baseQuantity;
+                quantity.value = maxAddQuantity;
+                quantity.max = maxAddQuantity;
+                throw Swal.fire(`Vous avez dépassé la limite de 100 articles, vous ne pouvez rajouter que ${maxAddQuantity} articles`);     
+            }
+        }
+        //localStorage.setItem('kanapCart').item.quantity = newQuantity;
+
+    })
+
+}*/
