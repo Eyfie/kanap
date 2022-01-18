@@ -1,10 +1,7 @@
 
-/*
-* Function to load the URL of the site and re-use it later
-*/
 
-
-async function loadConfig(){
-    let result = await fetch("../js/utils/config.json");
-    return result.json();
+//* Get server URL
+const loadConfig = async () => {
+    let data = await fetch("../js/utils/config.json")
+    return data.json();
 }

@@ -54,13 +54,13 @@ loadConfig()
             .catch((error) => {
                 console.log(error)
             });  
-});
+    });
 
 
 
 const updateCart = ({id, color, quantity}) => {
 
-    const kanapCart = JSON.parse(localStorage.getItem('kanapCart')) || [];
+    let kanapCart = JSON.parse(localStorage.getItem('kanapCart')) || [];
     const productIndex = kanapCart.findIndex((i) => i.id == id && i.color == color);
    
     if(productIndex !== -1){
