@@ -1,7 +1,7 @@
 //* Fetch Data from the DB
-const fetchData = async (config) => {
+const fetchData = async (config,url) => {
     try{
-        const response = await fetch(config.host+'/api/products');
+        const response = await fetch(config.host+url);
     
         if(!response.ok) throw (e)
 

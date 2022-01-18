@@ -10,70 +10,55 @@ const quantityElem = document.querySelector("#quantity");
 const submitElem = document.querySelector('#addToCart');
 
 
-//*URL
-
+//*URL Id
 const urlString = document.URL;
 const currentUrl = new URL(urlString);
 const productId = currentUrl.searchParams.get("id");
 
+//*Get and display product on page
+const displayProduct = async () => {
+    const config = await loadConfig();
+    const product = await fetchData(config, `/api/products/${productId}`);
+    productUI(product);
+}
 
-// TODO : Gérer le cas ou l'id produit dans l'URL est pas bonne.
-//* Load Config file
-loadConfig()
-    .then(data => {
-        
-        const config = data;
+//*UI component of the product
+const productUI = (product) => {    
+    //* Display product data on page
+    imageElem.innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+    priceElem.textContent = product.price;
+    descriptionElem.textContent = product.description;
+    titleElem.textContent = product.name;
+    document.title = product.name;
 
-        //* Fetch product data
-        fetch(config.host + "/api/products/" + productId)
-            .then(data => data.json())
-            .then(product => {
-
-                if(Object.keys(product).length === 0){
-                    throw Swal.fire({
-                        title : `ID invalide`,
-                        text : `Ce produit n'existe pas !`,
-                        icon : `warning`
-                    })
-                }
-                    //* Display product data on page
-                    imageElem.innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
-                    priceElem.textContent = product.price;
-                    descriptionElem.textContent = product.description;
-                    titleElem.textContent = product.name;
-                    document.title = product.name;
-
-                    //* Loop through colors and display them in options
-                    let colors = product.colors;
-                    colors.forEach(color=> {
-                        productColorsElem.innerHTML += `<option value="${color}">${color}</option>`;
-                    });
-
-            }) 
-
-            .catch((error) => {
-                console.log(error)
-            });  
+    //* Loop through colors and display them in options
+    let colors = product.colors;
+    colors.forEach(color=> {
+        productColorsElem.innerHTML += `<option value="${color}">${color}</option>`;
     });
+}
+
+displayProduct();
 
 
-
+//*Update cart product and product quantity
 const updateCart = ({id, color, quantity}) => {
 
     let kanapCart = JSON.parse(localStorage.getItem('kanapCart')) || [];
     const productIndex = kanapCart.findIndex((i) => i.id == id && i.color == color);
-   
+    
+    //*Checking if there's a similar product in the cart
     if(productIndex !== -1){
         
         let newQuantity = kanapCart[productIndex].quantity + quantity;
 
         if(newQuantity > 100){
 
-            //* Calcul la quantité maximum avant d'atteindre 100 articles
+            //* Check quantity left before the 100 limit
             const maxQuantity = 100 - kanapCart[productIndex].quantity;
     
-            //* Notify user of  the number of products he can order before reaching the limit of 100
-            
+           
+             //* Notify user of  the number of products he can order before reaching the limit of 100
             throw Swal.fire({
                 title : `Nombre invalide`,
                 text : `Vous ne pouvez commander que ${maxQuantity} articles avant d'atteindre le seuil des 100 articles !`,
@@ -85,7 +70,7 @@ const updateCart = ({id, color, quantity}) => {
         kanapCart[productIndex].quantity = newQuantity;
     }
     else{
-        //* Push l'objet dans le tableau car il n'existe pas encore
+        //* Push product in the cart because there's not a similar one in it
         kanapCart.push({id : productId, color, quantity});
     }
 
@@ -94,7 +79,7 @@ const updateCart = ({id, color, quantity}) => {
 
 
 
-
+//* Handling the submit Event 
 const handleSubmitButton = () => {
     try{
             let quantity = parseInt(quantityElem.value);
