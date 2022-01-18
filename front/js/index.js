@@ -19,7 +19,7 @@ const productUI = (products) =>{
 //*Display products on index page
 const displayProducts = async () =>{
     const config = await loadConfig();
-    const products = await fetchData(config, `/api/products`);
+    const products = await fetchData(config,`/api/products`);
     productUI(products);
 }
 

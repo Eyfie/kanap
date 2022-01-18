@@ -11,3 +11,7 @@ const fetchData = async (config,url) => {
         console.log(e);
     }
 }
+
+const postData = async () => {
+    //*TODO
+}
