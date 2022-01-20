@@ -34,7 +34,7 @@ const productUI = (product) => {
     //* Loop through colors and display them in options
     let colors = product.colors;
     colors.forEach(color=> {
-        productColorsElem.innerHTML += `<option value="${color}">${color}</option>`;
+        productColorsElem.insertAdjacentHTML('beforeend',`<option value="${color}">${color}</option>`);
     });
 }
 

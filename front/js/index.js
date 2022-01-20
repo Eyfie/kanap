@@ -1,8 +1,11 @@
+const items = document.querySelector('#items');
+
+
 //* Create UI for each product
 const productUI = (products) =>{
     products.forEach((product) => {
 
-        document.querySelector('#items').innerHTML +=
+        items.insertAdjacentHTML('beforeend',
         `
         <a href="./product.html?id=${product._id}">
             <article>
@@ -12,7 +15,8 @@ const productUI = (products) =>{
             <p class="productDescription">${product.description}</p>
             </article>
         </a>
-        `
+        `)
+        
     })
 }
 
