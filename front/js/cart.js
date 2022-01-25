@@ -20,7 +20,7 @@ cartItemTemplate = ({_id, color, quantity, name, price, imageUrl, altTxt}) =>
         <div class="cart__item__content__description">
             <h2>${name}</h2>
             <p>${color}</p>
-            <p>${price * quantity} €</p>
+            <p>${price} €</p>
         </div>
         <div class="cart__item__content__settings">
             <div class="cart__item__content__settings__quantity">
