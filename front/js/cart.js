@@ -35,11 +35,64 @@ cartItemTemplate = ({_id, color, quantity, name, price, imageUrl, altTxt}) =>
 </article>
 `;
 
+
 //* Get cart item and product data into an object
 const createItem = async ({id, color, quantity}) => {
     const config = await loadConfig();
     const product = await fetchData(config,`/api/products/${id}`);
     return {...product,color,quantity};
+}
+
+//* Display cart total price
+const updateCartTotal = () => {
+    
+    let totalPrice = 0;
+    let totalItems = 0;
+
+    //*loop through cart and add all prices and quantities together
+    kanapCart.forEach((item) => {
+        totalPrice += item.price*item.quantity;
+        totalItems += parseInt(item.quantity);
+    })
+
+    //*Display cart price and number of items
+    cartQuantity.textContent = `${totalItems} ${totalItems == 1 ? 'article' : 'articles'}`;
+    cartPrice.textContent = totalPrice;
+}
+
+
+
+const changeCartItemQuantity = ({id, color, quantity}) => {
+
+    const itemIndex = kanapCart.findIndex((index) => index._id === id && index.color === color);
+    kanapCart[itemIndex].quantity = quantity;
+
+    const newCart = kanapCart.map((item) => ({id : item._id, color : item.color, quantity : item.quantity}));
+    localStorage.setItem('kanapCart', JSON.stringify(newCart));
+
+}
+
+
+const handleQuantityInput = (e) =>{
+
+    const selectedItem = e.target.closest('[data-id]');
+    const {id, color} = selectedItem.dataset;
+    const quantity = e.target.value;
+
+    if(quantity == 0 || quantity < 0 || quantity > 100){
+        quantityElem.value = 1;
+        return Swal.fire({
+            title : `Nombre invalide`,
+            text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
+            icon : `warning`});
+    }
+
+    e.target.previousElementSibling.textContent = `Qté : ${quantity}`;
+    changeCartItemQuantity({id, color, quantity});
+
+
+    updateCartTotal();
+
 }
 
 
@@ -56,6 +109,8 @@ const deleteCartItem = ({id, color}) => {
     localStorage.setItem('kanapCart', JSON.stringify(newCart));
 }
 
+
+
 //* Handle click on delete button 
 const handleDeleteButton = (e) => {
 
@@ -68,6 +123,7 @@ const handleDeleteButton = (e) => {
 
     //*Remove clicked item from the storage cart
     deleteCartItem({ id, color });
+    updateCartTotal();
 
     //* Notify user
     return Swal.fire({
@@ -90,6 +146,13 @@ const displayCart = async() => {
 
         const deleteButtons = document.querySelectorAll('.deleteItem');
         deleteButtons.forEach((button) => button.addEventListener('click', handleDeleteButton));
+
+
+        const quantityInputs = document.querySelectorAll('.itemQuantity');
+        quantityInputs.forEach((input) => input.addEventListener('change', handleQuantityInput));
+
+        updateCartTotal();
+        
 
     }
     catch(e){
