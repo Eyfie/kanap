@@ -23,9 +23,10 @@ const displayProduct = async () => {
 }
 
 //*UI component of the product
-const productUI = (product) => {    
+const productUI = (product) => {   
+     
     //* Display product data on page
-    imageElem.innerHTML += `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+    imageElem.innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
     priceElem.textContent = product.price;
     descriptionElem.textContent = product.description;
     titleElem.textContent = product.name;
@@ -96,7 +97,7 @@ const handleSubmitButton = () => {
 
             //*Check if the quantity input is valid and if not reset the value to 1
             if(quantity == 0 || quantity < 0 || quantity > 100){
-                quantity = 1;
+                quantityElem.value = 1;
                 return Swal.fire({
                     title : `Nombre invalide`,
                     text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,

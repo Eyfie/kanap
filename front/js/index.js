@@ -1,31 +1,31 @@
 const items = document.querySelector('#items');
 
 
-//* Create UI for each product
-const productUI = (products) =>{
-    products.forEach((product) => {
+const displayProducts = async() => {
+    try{
+        const config = await loadConfig();
+        const products = await fetchData(config,`/api/products`);
 
-        items.insertAdjacentHTML('beforeend',
+        //*Create products template and display it on page
+        let productsTemplate = products.map(productTemplate).join(''); 
+        items.insertAdjacentHTML('beforeend', productsTemplate);
+    }
+    catch(e){
+        console.log(e);
+    }
+}
+
+//* Single product UI
+const productTemplate = ({_id, imageUrl, altTxt, name, description}) => 
         `
-        <a href="./product.html?id=${product._id}">
+        <a href="./product.html?id=${_id}">
             <article>
-            <img src="${product.imageUrl}" 
-                 alt="${product.altTxt}">
-            <h3 class="productName">${product.name}</h3>
-            <p class="productDescription">${product.description}</p>
+            <img src="${imageUrl}" 
+                 alt="${altTxt}">
+            <h3 class="productName">${name}</h3>
+            <p class="productDescription">${description}</p>
             </article>
         </a>
-        `)
-        
-    })
-}
-
-//*Display products on index page
-const displayProducts = async () =>{
-    const config = await loadConfig();
-    const products = await fetchData(config,`/api/products`);
-    productUI(products);
-}
-
+        `;
 
 displayProducts();
