@@ -1,8 +1,17 @@
-//* DOM selector
+//* DOM cart selector
+
 const cartElem = document.querySelector('#cart__items');
 const cartPrice = document.querySelector('#totalPrice');
 const cartQuantity = document.querySelector('#totalQuantity');
 
+
+//*DOM Form selector
+
+const firstNameField = document.querySelector('#firstname');
+const lastNameField = document.querySelector('#lastname');
+const addressField = document.querySelector('#address');
+const cityField = document.querySelector('#city');
+const emailField = document.querySelector('#email');
 
 //* Local Storage
 
@@ -43,6 +52,8 @@ const createItem = async ({id, color, quantity}) => {
     return {...product,color,quantity};
 }
 
+
+
 //* Display cart total price
 const updateCartTotal = () => {
     
@@ -61,7 +72,6 @@ const updateCartTotal = () => {
 }
 
 
-
 const changeCartItemQuantity = ({id, color, quantity}) => {
 
     const itemIndex = kanapCart.findIndex((index) => index._id === id && index.color === color);
@@ -73,6 +83,7 @@ const changeCartItemQuantity = ({id, color, quantity}) => {
 }
 
 
+
 const handleQuantityInput = (e) =>{
 
     const selectedItem = e.target.closest('[data-id]');
@@ -80,7 +91,7 @@ const handleQuantityInput = (e) =>{
     const quantity = e.target.value;
 
     if(quantity == 0 || quantity < 0 || quantity > 100){
-        quantityElem.value = 1;
+        
         return Swal.fire({
             title : `Nombre invalide`,
             text : `Vous ne pouvez commander qu'entre 1 et 100 articles de ce type !`,
@@ -88,9 +99,8 @@ const handleQuantityInput = (e) =>{
     }
 
     e.target.previousElementSibling.textContent = `Qté : ${quantity}`;
+   
     changeCartItemQuantity({id, color, quantity});
-
-
     updateCartTotal();
 
 }
@@ -128,7 +138,7 @@ const handleDeleteButton = (e) => {
     //* Notify user
     return Swal.fire({
         title: `Votre article a bien été supprimé`,
-        timer: 1500,
+        timer: 2000,
         showConfirmButton: false,
         icon: `success`
     });
@@ -136,21 +146,23 @@ const handleDeleteButton = (e) => {
 
 
 
-
+//* Display cart element on page
 const displayCart = async() => {
     try{
 
+        //* Generate cart item elements and display them
         kanapCart = await Promise.all(kanapCart.map(async (item) => createItem(item)));
         cartElem.innerHTML = kanapCart.map(cartItemTemplate).join('');
 
-
+        //* Add delete Button event listeners for each cart item
         const deleteButtons = document.querySelectorAll('.deleteItem');
         deleteButtons.forEach((button) => button.addEventListener('click', handleDeleteButton));
 
-
+        //* Add event listener for each cart item quantity input
         const quantityInputs = document.querySelectorAll('.itemQuantity');
         quantityInputs.forEach((input) => input.addEventListener('change', handleQuantityInput));
 
+        
         updateCartTotal();
         
 
@@ -163,3 +175,40 @@ const displayCart = async() => {
 
 //* Function calls
 displayCart();
+
+
+
+
+const orderData = () => {
+    
+    let products = kanapCart.map((item) => item._id, item.color, item.quantity);
+     
+    const contact = {
+        firstName : firstnameField.value.trim(),
+        lastName : lastNameField.value.trim(),
+        address : addressField.value.trim(),
+        city : cityField.value.trim(),
+        email : emailField.value.trim()
+    }
+
+    return {products, contact};
+}
+
+
+
+const regexChecker = {
+    name :  {
+        regex : /^[A-Za-zÀ-ÿ-' ]{3,}$/g,
+        error : "Ce champs doit contenir 3 lettres au minimum"
+    },
+    address : {
+        regex: /^[0-9A-Za-zÀ-ÿ-', ]{3,}$/g,
+        error : "Ce champs doit contenir un minimum de 3 lettres et/ou chiffres"
+    },
+    email : {
+        regex : /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        error : "Adresse e-mail invalide"
+    }
+}
+
+console.log(orderData());

@@ -22,6 +22,7 @@ const displayProduct = async () => {
     productUI(product);
 }
 
+// TODO change the foreach loop into a template
 //*UI component of the product
 const productUI = (product) => {   
      
