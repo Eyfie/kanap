@@ -22,7 +22,7 @@ const displayProduct = async () => {
     productUI(product);
 }
 
-// TODO change the foreach loop into a template
+
 //*UI component of the product
 const productUI = (product) => {   
      
@@ -35,10 +35,10 @@ const productUI = (product) => {
 
     //* Loop through colors and display them in options
     let colors = product.colors;
-    colors.forEach(color=> {
-        productColorsElem.insertAdjacentHTML('beforeend',`<option value="${color}">${color}</option>`);
-    });
-}
+    let colorDisplay = colors.map((color) => `<option value="${color}">${color}</option>`);
+    productColorsElem.insertAdjacentHTML('beforeend', colorDisplay);
+};
+
 
 displayProduct();
 

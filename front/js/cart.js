@@ -184,7 +184,7 @@ const orderData = () => {
     let products = kanapCart.map((item) => item._id, item.color, item.quantity);
      
     const contact = {
-        firstName : firstnameField.value.trim(),
+        firstName : firstNameField.value.trim(),
         lastName : lastNameField.value.trim(),
         address : addressField.value.trim(),
         city : cityField.value.trim(),
