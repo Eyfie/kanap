@@ -97,7 +97,7 @@ const handleSubmitButton = () => {
             }
 
             //*Check if the quantity input is valid and if not reset the value to 1
-            if(quantity == 0 || quantity < 0 || quantity > 100){
+            if(isNaN(quantity) || quantity == 0 || quantity < 0 || quantity > 100){
                 quantityElem.value = 1;
                 return Swal.fire({
                     title : `Nombre invalide`,

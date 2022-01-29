@@ -5,14 +5,6 @@ const cartPrice = document.querySelector('#totalPrice');
 const cartQuantity = document.querySelector('#totalQuantity');
 
 
-//*DOM Form selector
-
-const firstNameField = document.querySelector('#firstname');
-const lastNameField = document.querySelector('#lastname');
-const addressField = document.querySelector('#address');
-const cityField = document.querySelector('#city');
-const emailField = document.querySelector('#email');
-
 //* Local Storage
 
 let kanapCart = JSON.parse(localStorage.getItem("kanapCart")) || [];
@@ -179,36 +171,3 @@ displayCart();
 
 
 
-const orderData = () => {
-    
-    let products = kanapCart.map((item) => item._id, item.color, item.quantity);
-     
-    const contact = {
-        firstName : firstNameField.value.trim(),
-        lastName : lastNameField.value.trim(),
-        address : addressField.value.trim(),
-        city : cityField.value.trim(),
-        email : emailField.value.trim()
-    }
-
-    return {products, contact};
-}
-
-
-
-const regexChecker = {
-    name :  {
-        regex : /^[A-Za-zÀ-ÿ-' ]{3,}$/g,
-        error : "Ce champs doit contenir 3 lettres au minimum"
-    },
-    address : {
-        regex: /^[0-9A-Za-zÀ-ÿ-', ]{3,}$/g,
-        error : "Ce champs doit contenir un minimum de 3 lettres et/ou chiffres"
-    },
-    email : {
-        regex : /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-        error : "Adresse e-mail invalide"
-    }
-}
-
-console.log(orderData());
