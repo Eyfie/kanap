@@ -55,7 +55,7 @@ const checkInput = (e, regex) => {
         isValid = true;
     }
 
-    input.valid = isValid;
+    
     displayErrorMessage(isValid, input, regex);
 
 };
@@ -90,23 +90,21 @@ const postOrder = async () => {
     }
 }
 
-const handleOrderSubmit = (e) => {
+const handleOrderSubmit = () => {
     e.preventDefault();
 
-    
+    let inputs = Array.from(document.querySelectorAll('input[type="text"]' && 'input[type="email"]'));
+    let hasError = inputs.map((input) => input.isValid).includes(false);
 
-
-
-
-    
-
-
+    if(hasError) return alert('Veuillez remplir les champs du formulaire correctement !');
 
     postOrder();
+
 }
 
 
-//submitButton.addEventListener('click', handleOrderSubmit)
+
+submitButton.addEventListener('click', handleOrderSubmit)
 firstNameField.addEventListener('input', (e) => checkInput(e, regex.name));
 lastNameField.addEventListener('input', (e) => checkInput(e, regex.name));
 addressField.addEventListener('input', (e) => checkInput(e, regex.address));
