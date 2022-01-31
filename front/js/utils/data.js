@@ -16,16 +16,17 @@ const fetchData = async (config,url) => {
 //* Post data for order
 const postData = async (config,url,order) => {
     try{
-        const response = await fetch(config.host + url, {
+
+        const response = await fetch(config.host + url,{
             method : 'POST',
             headers : {
-                'Accept' : 'application/json',
+                Accept : 'application/json',
                 'Content-Type' : 'application/json'
             },
-
-            body : JSON.stringify(order)
+            body : order
         });
-
+        
+        
         if(!response.ok) throw response;
 
         return response.json();
