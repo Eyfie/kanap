@@ -23,7 +23,7 @@ const postData = async (config,url,order) => {
                 Accept : 'application/json',
                 'Content-Type' : 'application/json'
             },
-            body : order
+            body : JSON.stringify(order)
         });
         
         

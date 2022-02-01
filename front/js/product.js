@@ -11,8 +11,7 @@ const submitElem = document.querySelector('#addToCart');
 
 
 //*URL Id
-const urlString = document.URL;
-const currentUrl = new URL(urlString);
+const currentUrl = new URL(window.location.href);
 const productId = currentUrl.searchParams.get("id");
 
 //*Get and display product on page

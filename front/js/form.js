@@ -27,7 +27,7 @@ const orderData = () => {
 
 
 const regex = {
-    name :  {
+    name : {
         regex : /^[A-Za-zÀ-ÿ-' ]{3,}$/g,
         error : "Ce champ doit contenir 3 lettres au minimum"
     },
@@ -56,8 +56,7 @@ const checkInput = (e, regex) => {
 
     input.valid = isValid;
     displayErrorMessage(isValid, input, regex);
-
-};
+}
 
 
 
@@ -74,19 +73,19 @@ const displayErrorMessage = (isValid, input, regex) => {
 
 const postOrder = async () => {
     try{
-        const order = await orderData();
+        const order = orderData();
+        
+        if( order < 1 ) throw alert('Il vous faut au moins 1 article dans votre panier');
 
-        console.log(order);
-
-        if( order<1 ) throw alert('Il faut au moins 1 article dans votre panier');
 
         const config = await loadConfig();
-        const {orderResponse} = await postData(config,`/api/products/order`, order);
+        const {orderId} = await postData(config,`/api/products/order`, order);
 
-        //console.log(orderId.length);
 
-        localStorage.removeItem('kanapCart');
-        window.location.replace(`confirmation.html?order=${orderResponse.orderId}`);
+        console.log(orderId);
+
+        //localStorage.removeItem('kanapCart');
+        window.location.replace(`confirmation.html?order=${orderId}`);
         
     }
     catch(e){
@@ -97,21 +96,20 @@ const postOrder = async () => {
 const handleOrderSubmit = (e) => {
     e.preventDefault();
 
-    let inputs = Array.from(e.target.querySelectorAll('input:not([type="submit"], .itemQuantity)'));
+    let inputs = Array.from(document.querySelectorAll('input:not([type="submit"], .itemQuantity)'));
     let hasError = inputs.map((input) => input.valid).includes(false);
 
 
-    if(hasError) throw alert('Veuillez remplir les champs du formulaire correctement !');
+    if(hasError) throw Error = 'Veuillez remplir les champs du formulaire correctement !';
 
     postOrder();
 }
 
 
 
-
+submitButton.addEventListener('click', handleOrderSubmit);
 firstNameField.addEventListener('input', (e) => checkInput(e, regex.name));
 lastNameField.addEventListener('input', (e) => checkInput(e, regex.name));
 addressField.addEventListener('input', (e) => checkInput(e, regex.address));
 cityField.addEventListener('input', (e) => checkInput(e, regex.name));
 emailField.addEventListener('input', (e) => checkInput(e, regex.email));
-submitButton.addEventListener('click', handleOrderSubmit);
