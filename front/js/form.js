@@ -74,35 +74,43 @@ const displayErrorMessage = (isValid, input, regex) => {
 const postOrder = async () => {
     try{
         const order = orderData();
-        
-        if( order < 1 ) throw alert('Il vous faut au moins 1 article dans votre panier');
 
+
+        //*Check if there's a product to order
+        if(order.products.length < 1) throw Swal.fire('Il vous faut au moins 1 article dans votre panier');
+
+        //* Check if every single form field is completed
+        const contact = Object.values(order.contact);
+        contact.forEach((value) => {if(value=='') throw Swal.fire('Remplissez entièrement le formulaire de contact');});
+    
 
         const config = await loadConfig();
         const {orderId} = await postData(config,`/api/products/order`, order);
 
-
-        console.log(orderId);
-
-        //localStorage.removeItem('kanapCart');
+        localStorage.removeItem('kanapCart');
         window.location.replace(`confirmation.html?order=${orderId}`);
         
     }
-    catch(e){
-        console.log(e);
+    catch(Error){
+       
     }
 }
 
 const handleOrderSubmit = (e) => {
-    e.preventDefault();
+    try{
+        e.preventDefault();
 
-    let inputs = Array.from(document.querySelectorAll('input:not([type="submit"], .itemQuantity)'));
-    let hasError = inputs.map((input) => input.valid).includes(false);
+        let inputs = Array.from(document.querySelectorAll('input:not([type="submit"], .itemQuantity)'));
+        let hasError = inputs.map((input) => input.valid).includes(false);
 
 
-    if(hasError) throw Error = 'Veuillez remplir les champs du formulaire correctement !';
+        if(hasError) throw Error = 'Veuillez remplir les champs du formulaire correctement !';
 
-    postOrder();
+        postOrder();
+    }
+    catch(Error){
+        Swal.fire(Error);
+    }
 }
 
 

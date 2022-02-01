@@ -58,6 +58,7 @@ const updateCart = ({id, color, quantity}) => {
             //* Check quantity left before the 100 limit
             const maxQuantity = 100 - kanapCart[productIndex].quantity;
     
+            quantityElem.value = maxQuantity;
             
              //* Notify user of  the number of products he can order before reaching the limit of 100
             throw Swal.fire({

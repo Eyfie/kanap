@@ -10,8 +10,8 @@ const displayProducts = async() => {
         let productsTemplate = products.map(productTemplate).join(''); 
         items.insertAdjacentHTML('beforeend', productsTemplate);
     }
-    catch(e){
-        console.log(e);
+    catch(Error){
+        console.log(Error);
     }
 }
 
