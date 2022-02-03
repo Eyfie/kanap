@@ -8,7 +8,7 @@ const emailField = document.querySelector('#email');
 const submitButton = document.querySelector('#order');
 
 
-
+//* Get all the data necessary for the order
 const orderData = () => {
     
     let products = kanapCart.map((item) => item._id);
@@ -25,7 +25,7 @@ const orderData = () => {
 }
 
 
-
+//* Regex and error mesage associated for each instance that need to be checked
 const regex = {
     name : {
         regex : /^[A-Za-zÀ-ÿ-' ]{3,}$/g,
@@ -42,47 +42,48 @@ const regex = {
 }
 
 
+//*Function that display error message if the form input is not valid
+const displayErrorMessage = (isValid, input, regexKey) => {
+
+    let errorMessage = input.nextSibling;
+
+    if(isValid == false) return errorMessage.textContent = regexKey.error;
+    return errorMessage.textContent ='';
+}
 
 //* Check input of form field and return true or false if the input match or not the regex.
-const checkInput = (e, regex) => {
+const checkInput = (e, regexKey) => {
 
     let input = e.target;
     let inputValue = input.value.trim();
     let isValid = false;
 
-    if(inputValue.match(regex.regex)){
+    if(inputValue.match(regexKey.regex)){
         isValid = true;
     }
 
     input.valid = isValid;
-    displayErrorMessage(isValid, input, regex);
+    displayErrorMessage(isValid, input, regexKey);
 }
 
+//* Check if the order is correctly set up
+const checkOrder = (order) => {
 
+     //*Check if there's a product to order
+     if(order.products.length < 1) throw Swal.fire({text : 'Il vous faut au moins 1 article dans votre panier', icon : 'warning'});
 
-//*Function that display error message if the input is not valid
-const displayErrorMessage = (isValid, input, regex) => {
-
-    let errorMessage = input.nextSibling;
-
-    if(isValid == false) return errorMessage.textContent = regex.error;
-    return errorMessage.textContent ='';
+     //* Check if every single form field is completed
+     const contact = Object.values(order.contact);
+     contact.forEach((value) => {
+         if(value=='') throw Swal.fire({text : 'Remplissez entièrement le formulaire de contact', icon : 'warning'});
+     });
 }
 
-
-
+//* Handle the order post 
 const postOrder = async () => {
     try{
         const order = orderData();
-
-
-        //*Check if there's a product to order
-        if(order.products.length < 1) throw Swal.fire('Il vous faut au moins 1 article dans votre panier');
-
-        //* Check if every single form field is completed
-        const contact = Object.values(order.contact);
-        contact.forEach((value) => {if(value=='') throw Swal.fire('Remplissez entièrement le formulaire de contact');});
-    
+        checkOrder(order);
 
         const config = await loadConfig();
         const {orderId} = await postData(config,`/api/products/order`, order);
@@ -96,6 +97,10 @@ const postOrder = async () => {
     }
 }
 
+
+
+
+//* Handle Submit event
 const handleOrderSubmit = (e) => {
     try{
         e.preventDefault();
@@ -104,7 +109,7 @@ const handleOrderSubmit = (e) => {
         let hasError = inputs.map((input) => input.valid).includes(false);
 
 
-        if(hasError) throw Error = 'Veuillez remplir les champs du formulaire correctement !';
+        if(hasError) throw Error = {text :'Veuillez remplir les champs du formulaire correctement !', icon :'warning'};
 
         postOrder();
     }

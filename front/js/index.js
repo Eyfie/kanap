@@ -1,6 +1,6 @@
 const items = document.querySelector('#items');
 
-
+//* Display all products on page 
 const displayProducts = async() => {
     try{
         const config = await loadConfig();

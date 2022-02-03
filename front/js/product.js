@@ -16,9 +16,14 @@ const productId = currentUrl.searchParams.get("id");
 
 //*Get and display product on page
 const displayProduct = async () => {
+
     const config = await loadConfig();
+
+    await checkProductId(config, productId);
+
     const product = await fetchData(config, `/api/products/${productId}`);
     productUI(product);
+ 
 }
 
 
@@ -57,13 +62,12 @@ const updateCart = ({id, color, quantity}) => {
 
             //* Check quantity left before the 100 limit
             const maxQuantity = 100 - kanapCart[productIndex].quantity;
-    
             quantityElem.value = maxQuantity;
             
              //* Notify user of  the number of products he can order before reaching the limit of 100
             throw Swal.fire({
                 title : `Nombre invalide`,
-                text : `Vous ne pouvez commander que ${maxQuantity} articles avant d'atteindre le seuil des 100 articles !`,
+                text : `${maxQuantity <=0 ? `Vous ne pouvez plus commander d'articles de ce type` :  `Vous ne pouvez commander que ${maxQuantity} articles avant datteindre le seuil des 100 articles !`}`,
                 icon : `warning`
             });
         }
@@ -119,6 +123,30 @@ const handleSubmitButton = () => {
         console.log(e);
     }
 };
+
+//*Check if product exist
+const checkProductId = async(config, productId) => {
+    try{   
+        const products = await fetchData(config,`/api/products`);
+        const productIndex = products.findIndex((i) => i._id == productId);
+
+        //* If no product of this id exist redirect to homepage
+        if(productIndex == -1) throw Swal.fire({
+            title : `Ce produit n'existe pas, vous allez être redirigé sur la page d'accueil`,
+            showConfirmButton : false,
+            icon : `warning`,
+            didOpen: () => {
+                    Swal.showLoading()
+                    setTimeout(() => {
+                        window.location.replace(`index.html`)
+                    }, 3000)
+                }
+            });
+    }
+    catch(e){
+        console.log(e);
+    }
+}
 
 //* Event Listeners
 

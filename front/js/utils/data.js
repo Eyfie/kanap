@@ -32,6 +32,7 @@ const postData = async (config,url,order) => {
         return response.json();
     }
     catch(e){
+        Swal.fire('Le serveur ne répond pas')
         throw Error(e.status ? `${e.status} ${e.statusText}` : 'Le serveur ne répond pas');
     }
 }

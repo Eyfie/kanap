@@ -63,7 +63,7 @@ const updateCartTotal = () => {
     cartPrice.textContent = totalPrice;
 }
 
-
+//* Handle the quantity change of an item in local storage cart
 const changeCartItemQuantity = ({id, color, quantity}) => {
 
     const itemIndex = kanapCart.findIndex((index) => index._id === id && index.color === color);
@@ -75,7 +75,7 @@ const changeCartItemQuantity = ({id, color, quantity}) => {
 }
 
 
-
+//* Handle quantity change of an item input 
 const handleQuantityInput = (e) =>{
 
     const selectedItem = e.target.closest('[data-id]');
@@ -107,7 +107,7 @@ const deleteCartItem = ({id, color}) => {
     kanapCart.splice(itemIndex, 1);
 
     //* Push new Cart without the item in local storage
-    const newCart = kanapCart.map((item) => ({id : item._id, color : item.color, qunatity : item.quantity}));
+    const newCart = kanapCart.map((item) => ({id : item._id, color : item.color, quantity : item.quantity}));
     localStorage.setItem('kanapCart', JSON.stringify(newCart));
 }
 
