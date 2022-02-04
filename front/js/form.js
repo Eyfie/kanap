@@ -11,8 +11,20 @@ const submitButton = document.querySelector('#order');
 //* Get all the data necessary for the order
 const orderData = () => {
     
-    let products = kanapCart.map((item) => item._id);
-     
+    let products = kanapCart.flatMap((item) => item._id);
+    
+    
+    /*{
+        
+        const idString = `${item._id} `
+        const idStringRepeated = idString.repeat(item.quantity);
+        const idStringRepeatedClean = idStringRepeated.slice(0, -1);
+        const idArray = idStringRepeatedClean.split(' ');
+        
+        return idArray;
+    });*/
+
+
     const contact = {
         firstName : firstNameField.value.trim(),
         lastName : lastNameField.value.trim(),
@@ -25,7 +37,7 @@ const orderData = () => {
 }
 
 
-//* Regex and error mesage associated for each instance that need to be checked
+//* Regex and error message associated for each instance that need to be checked
 const regex = {
     name : {
         regex : /^[A-Za-zÀ-ÿ-' ]{3,}$/g,
@@ -88,12 +100,12 @@ const postOrder = async () => {
         const config = await loadConfig();
         const {orderId} = await postData(config,`/api/products/order`, order);
 
-        localStorage.removeItem('kanapCart');
-        window.location.replace(`confirmation.html?order=${orderId}`);
+        //localStorage.removeItem('kanapCart');
+        //window.location.replace(`confirmation.html?order=${orderId}`);
         
     }
     catch(Error){
-       
+       console.log(Error);
     }
 }
 
@@ -101,15 +113,16 @@ const postOrder = async () => {
 
 
 //* Handle Submit event
-const handleOrderSubmit = (e) => {
+const handleOrderSubmit = (event) => {
     try{
-        e.preventDefault();
+        event.preventDefault();
 
-        let inputs = Array.from(document.querySelectorAll('input:not([type="submit"], .itemQuantity)'));
-        let hasError = inputs.map((input) => input.valid).includes(false);
+        //const inputs = Array.from(document.querySelectorAll('input:not([type="submit"], .itemQuantity)'));
+        const inputs = [...document.querySelectorAll('input:not([type="submit"], .itemQuantity)')];
+        const hasError = inputs.map((input) => input.valid).includes(false);
 
 
-        if(hasError) throw Error = {text :'Veuillez remplir les champs du formulaire correctement !', icon :'warning'};
+        if(hasError) throw {text :'Veuillez remplir les champs du formulaire correctement !', icon :'warning'};
 
         postOrder();
     }
@@ -126,3 +139,8 @@ lastNameField.addEventListener('input', (e) => checkInput(e, regex.name));
 addressField.addEventListener('input', (e) => checkInput(e, regex.address));
 cityField.addEventListener('input', (e) => checkInput(e, regex.name));
 emailField.addEventListener('input', (e) => checkInput(e, regex.email));
+
+
+// TODO Check JSDoc 
+
+// FIXME

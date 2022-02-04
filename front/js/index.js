@@ -1,5 +1,3 @@
-const items = document.querySelector('#items');
-
 //* Display all products on page 
 const displayProducts = async() => {
     try{
@@ -8,6 +6,8 @@ const displayProducts = async() => {
 
         //*Create products template and display it on page
         let productsTemplate = products.map(productTemplate).join(''); 
+
+        const items = document.querySelector('#items');
         items.insertAdjacentHTML('beforeend', productsTemplate);
     }
     catch(Error){

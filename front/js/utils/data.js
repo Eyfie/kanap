@@ -8,6 +8,11 @@ const fetchData = async (config,url) => {
         return response.json()
     }
     catch(e){
+
+        console.log(e);
+        if(e.status == 404) {
+           return e.status; 
+        }
         throw Error(e.status ? `${e.status} ${e.statusText}` : 'Le serveur ne répond pas');
     }
 }
@@ -32,7 +37,7 @@ const postData = async (config,url,order) => {
         return response.json();
     }
     catch(e){
-        Swal.fire('Le serveur ne répond pas')
+        Swal.fire('Le serveur ne répond pas');
         throw Error(e.status ? `${e.status} ${e.statusText}` : 'Le serveur ne répond pas');
     }
 }

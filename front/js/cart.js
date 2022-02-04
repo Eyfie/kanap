@@ -45,7 +45,6 @@ const createItem = async ({id, color, quantity}) => {
 }
 
 
-
 //* Display cart total price
 const updateCartTotal = () => {
     
@@ -82,7 +81,7 @@ const handleQuantityInput = (e) =>{
     const {id, color} = selectedItem.dataset;
     const quantity = e.target.value;
 
-    if(quantity == 0 || quantity < 0 || quantity > 100){
+    if( quantity <= 0 || quantity > 100){
         
         return Swal.fire({
             title : `Nombre invalide`,
