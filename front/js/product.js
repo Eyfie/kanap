@@ -74,11 +74,9 @@ const updateCart = ({id, color, quantity}) => {
             quantityElem.value = maxQuantity;
             
              //* Notify user of  the number of products he can order before reaching the limit of 100
-            throw Swal.fire({
-                title : `Nombre invalide`,
-                text : `${maxQuantity <=0 ? `Vous ne pouvez plus commander d'articles de ce type` :  `Vous ne pouvez commander que ${maxQuantity} articles avant d'atteindre le seuil des 100 articles !`}`,
-                icon : `warning`
-            });
+            throw { title : `Nombre invalide`,
+                    text : `${maxQuantity <=0 ? `Vous ne pouvez plus commander d'articles de ce type` :  `Vous ne pouvez commander que ${maxQuantity} articles avant d'atteindre le seuil des 100 articles !`}`,
+                    icon : `warning`};
         }
 
         //* Change quantity value of the selected object

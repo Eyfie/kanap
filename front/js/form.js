@@ -13,18 +13,6 @@ const orderData = () => {
     
     let products = kanapCart.flatMap((item) => item._id);
     
-    
-    /*{
-        
-        const idString = `${item._id} `
-        const idStringRepeated = idString.repeat(item.quantity);
-        const idStringRepeatedClean = idStringRepeated.slice(0, -1);
-        const idArray = idStringRepeatedClean.split(' ');
-        
-        return idArray;
-    });*/
-
-
     const contact = {
         firstName : firstNameField.value.trim(),
         lastName : lastNameField.value.trim(),
@@ -63,6 +51,7 @@ const displayErrorMessage = (isValid, input, regexKey) => {
     return errorMessage.textContent ='';
 }
 
+
 //* Check input of form field and return true or false if the input match or not the regex.
 const checkInput = (e, regexKey) => {
 
@@ -78,18 +67,20 @@ const checkInput = (e, regexKey) => {
     displayErrorMessage(isValid, input, regexKey);
 }
 
+
 //* Check if the order is correctly set up
 const checkOrder = (order) => {
+        //*Check if there's a product to order
+        if(order.products.length < 1) throw {text : 'Il vous faut au moins 1 article dans votre panier', icon : 'warning'};
 
-     //*Check if there's a product to order
-     if(order.products.length < 1) throw Swal.fire({text : 'Il vous faut au moins 1 article dans votre panier', icon : 'warning'});
-
-     //* Check if every single form field is completed
-     const contact = Object.values(order.contact);
-     contact.forEach((value) => {
-         if(value=='') throw Swal.fire({text : 'Remplissez entièrement le formulaire de contact', icon : 'warning'});
-     });
+        //* Check if every single form field is completed
+        const contact = Object.values(order.contact);
+        contact.forEach((value) => {
+            if(value=='') throw {text : 'Remplissez entièrement le formulaire de contact', icon : 'warning'};
+        });
 }
+
+
 
 //* Handle the order post 
 const postOrder = async () => {
@@ -100,12 +91,12 @@ const postOrder = async () => {
         const config = await loadConfig();
         const {orderId} = await postData(config,`/api/products/order`, order);
 
-        //localStorage.removeItem('kanapCart');
-        //window.location.replace(`confirmation.html?order=${orderId}`);
+        localStorage.removeItem('kanapCart');
+        window.location.replace(`confirmation.html?order=${orderId}`);
         
     }
     catch(Error){
-       console.log(Error);
+      Swal.fire(Error);
     }
 }
 
@@ -139,8 +130,3 @@ lastNameField.addEventListener('input', (e) => checkInput(e, regex.name));
 addressField.addEventListener('input', (e) => checkInput(e, regex.address));
 cityField.addEventListener('input', (e) => checkInput(e, regex.name));
 emailField.addEventListener('input', (e) => checkInput(e, regex.email));
-
-
-// TODO Check JSDoc 
-
-// FIXME

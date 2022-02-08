@@ -37,12 +37,14 @@ cartItemTemplate = ({_id, color, quantity, name, price, imageUrl, altTxt}) =>
 `;
 
 
+
 //* Get cart item and product data into an object
 const createItem = async ({id, color, quantity}) => {
     const config = await loadConfig();
     const product = await fetchData(config,`/api/products/${id}`);
     return {...product,color,quantity};
 }
+
 
 
 //* Display cart total price
@@ -61,6 +63,7 @@ const updateCartTotal = () => {
     cartQuantity.textContent = `${totalItems} ${totalItems == 1 ? 'article' : 'articles'}`;
     cartPrice.textContent = totalPrice;
 }
+
 
 //* Handle the quantity change of an item in local storage cart
 const changeCartItemQuantity = ({id, color, quantity}) => {
@@ -81,7 +84,7 @@ const handleQuantityInput = (e) =>{
     const {id, color} = selectedItem.dataset;
     const quantity = e.target.value;
 
-    if( quantity <= 0 || quantity > 100){
+    if( isNaN(quantity) || quantity <= 0 || quantity > 100){
         
         return Swal.fire({
             title : `Nombre invalide`,
@@ -158,8 +161,8 @@ const displayCart = async() => {
         
 
     }
-    catch(e){
-        console.log(e);
+    catch(Error){
+        console.log(Error);
     }
 }
 
